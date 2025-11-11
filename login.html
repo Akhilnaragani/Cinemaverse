@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang=en>
+
+<head>
+    <meta charset=UTF-8>
+    <meta name=viewport content="width=device-width, initial-scale=1.0">
+    <title>Cinemaverse - Login & Sign Up</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box
+        }
+
+        .navbar {
+            background-color: black;
+            padding: 20px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 1
+        }
+
+        .logo {
+            font-size: 2.5em;
+            color: #f00;
+            font-weight: bold;
+            font-family: 'Electrolize', sans-serif
+        }
+
+        .menu-list {
+            display: flex;
+            list-style: none;
+            gap: 20px;
+            justify-content: center;
+            flex-grow: 1
+        }
+
+        .menu-list-item a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 30px;
+            font-size: 1.1em;
+            font-family: 'Electrolize', sans-serif;
+            transition: color .3s
+        }
+
+        .menu-list-item a.active,
+        .menu-list-item a:hover {
+            color: #f00
+        }
+
+        body {
+            background-color: black;
+            font-family: 'Electrolize', sans-serif;
+            color: white;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start
+        }
+
+        main {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-grow: 1
+        }
+
+        .form-container {
+            background-color: rgba(26, 26, 26, 0.9);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+            max-width: 450px;
+            width: 100%
+        }
+
+        h2 {
+            color: #f00;
+            text-align: center;
+            margin-bottom: 20px
+        }
+
+        .form-group {
+            margin-bottom: 15px
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 1.1em;
+            margin-bottom: 5px;
+            color: white
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #444;
+            border-radius: 5px;
+            background-color: #2a2a2a;
+            color: white
+        }
+
+        .form-group input:focus {
+            outline: 0;
+            border-color: #f00
+        }
+
+        .form-button {
+            width: 100%;
+            padding: 12px;
+            background-color: #f00;
+            color: white;
+            border: 0;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: background-color .3s
+        }
+
+        .form-button:hover {
+            background-color: #c00
+        }
+
+        .form-footer {
+            text-align: center;
+            margin-top: 10px
+        }
+
+        .form-footer a {
+            color: #f00;
+            text-decoration: none;
+            font-weight: bold
+        }
+
+        .form-footer a:hover {
+            text-decoration: underline
+        }
+
+        .form-toggle {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px
+        }
+
+        .toggle-btn {
+            background-color: #333;
+            color: white;
+            padding: 12px 20px;
+            border: 0;
+            cursor: pointer;
+            flex: 1;
+            font-weight: bold;
+            border-radius: 5px
+        }
+
+        .toggle-btn.active {
+            background-color: #f00
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="auth.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Electrolize&display=swap" rel=stylesheet>
+</head>
+
+<body>
+    <header>
+        <div class=navbar>
+            <div class=logo>Cinemaverse</div>
+            <ul class=menu-list>
+                <li class=menu-list-item><a href=index.html>Home</a></li>
+                <!-- <li class="menu-list-item active"><a href=movies.html>Movies</a></li> -->
+                <!-- <li class=menu-list-item><a href=series.html>Series</a></li> -->
+                <!-- <li class="menu-list-item login-button"><a href="login.html">Login</a></li> -->
+                <!-- <li class="menu-list-item logout-button" style="display:none;"><a href="javascript:void(0)"
+                        onclick="logout()">Logout</a></li> -->
+
+            </ul>
+        </div>
+    </header>
+    <main>
+        <div class=form-container>
+            <div class=form-toggle>
+                <button class="toggle-btn active" onclick="toggleForm('login')">Login</button>
+                <button class=toggle-btn onclick="toggleForm('signup')">Sign Up</button>
+            </div>
+            <div id="login-form" class="auth-form">
+                <h2>Login</h2>
+                <form id="login-form-action" onsubmit="return handleLogin(event)">
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" required>
+                    </div>
+
+                    <button type="submit" class="form-button">Login</button>
+<p style="text-align:center; margin-top:10px;">
+  <a href="javascript:void(0)" id="open-forgot" style="color:#f00; text-decoration:none;">Forgot password?</a>
+</p>
+
+                    <!-- ✅ Google Login Button -->
+                    <!-- <button type="button" onclick="handleGoogleSignIn()" class="form-button"
+                        style="background-color:#4285F4;margin-top:10px;">
+                        Sign in with Google
+                    </button> -->
+
+                    <div class="form-footer">
+                        <p>Don't have an account? <a href="javascript:void(0)" onclick="toggleForm('signup')">Sign
+                                Up</a></p>
+                    </div>
+                </form>
+            </div>
+
+            <div id="signup-form" class="auth-form" style="display:none">
+                <h2>Sign Up</h2>
+                <form id="signup-form-action" onsubmit="return handleSignup(event)">
+                    <div class="form-group">
+                        <label for="name-signup">Full Name</label>
+                        <input type="text" id="name-signup" name="name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email-signup">Email</label>
+                        <input type="email" id="email-signup" name="email" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password-signup">Password</label>
+                        <input type="password" id="password-signup" name="password" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="confirm-password-signup">Confirm Password</label>
+                        <input type="password" id="confirm-password-signup" name="confirm-password" required>
+                    </div>
+
+                    <button type="submit" class="form-button">Sign Up</button>
+
+                    <div class="form-footer">
+                        <p>Already have an account? <a href="javascript:void(0)" onclick="toggleForm('login')">Login</a>
+                        </p>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </main>
+    <script>
+        function toggleForm(formType) {
+            const loginForm = document.getElementById('login-form');
+            const signupForm = document.getElementById('signup-form');
+            const loginBtn = document.querySelector('button[onclick="toggleForm(\'login\')"]');
+            const signupBtn = document.querySelector('button[onclick="toggleForm(\'signup\')"]');
+
+            if (formType === 'login') {
+                loginForm.style.display = 'block';
+                signupForm.style.display = 'none';
+                loginBtn.classList.add('active');
+                signupBtn.classList.remove('active');
+            } else {
+                loginForm.style.display = 'none';
+                signupForm.style.display = 'block';
+                loginBtn.classList.remove('active');
+                signupBtn.classList.add('active');
+            }
+        }
+
+        // Login
+        async function handleLogin(e) {
+            e.preventDefault();
+
+            // Disable the submit button to prevent double clicks
+            const submitButton = e.target.querySelector('button[type="submit"]');
+            if (submitButton) submitButton.disabled = true;
+
+            try {
+                const email = document.getElementById("email").value.trim();
+                const password = document.getElementById("password").value;
+
+                console.log('Attempting login...');
+                const { data, error } = await supabase.auth.signInWithPassword({
+                    email,
+                    password
+                });
+
+                // Save session immediately after successful login
+                if (data?.session) {
+                    window.activeSession = data.session;
+                }
+
+                if (error) {
+                    console.error('Login error:', error);
+                    alert(error.message);
+                    return false;
+                }
+
+                if (data && data.user) {
+                    console.log('Login successful');
+
+                    // ✅ Add this line:
+                    localStorage.setItem("showGreeting", "yes");
+
+                    const params = new URLSearchParams(window.location.search);
+                    const redirect = params.get('redirect') || 'index.html';
+                    window.location.replace(redirect);
+                }
+                else {
+                    console.error('No user data received');
+                    alert('Login failed. Please try again.');
+                }
+            } catch (err) {
+                console.error('Unexpected error:', err);
+                alert('An unexpected error occurred. Please try again.');
+            } finally {
+                // Re-enable the submit button
+                if (submitButton) submitButton.disabled = false;
+            }
+        }
+
+        // Signup
+        // Signup
+        async function handleSignup(e) {
+            e.preventDefault();
+
+            const name = document.getElementById("name-signup").value.trim();
+            const email = document.getElementById("email-signup").value.trim();
+            const password = document.getElementById("password-signup").value;
+            const confirm = document.getElementById("confirm-password-signup").value;
+
+            if (password !== confirm) {
+                alert("Passwords do not match!");
+                return false;
+            }
+
+            // ✅ Store name as user metadata (automatically syncs to profiles table if trigger exists)
+            const { data, error } = await supabase.auth.signUp({
+                email,
+                password,
+                options: {
+                    data: { full_name: name }
+                }
+            });
+
+            if (error) {
+                alert(error.message);
+                return false;
+            }
+
+            alert("Account created! Please log in.");
+            toggleForm('login');
+            return false;
+        }
+
+
+
+
+        // Google Sign-In
+        async function handleGoogleSignIn() {
+            const { error } = await supabase.auth.signInWithOAuth({ provider: 'google' });
+            if (error) {
+                alert(error.message);
+            }
+        }
+    </script>
+    <script>updateAuthUI();</script>
+<!-- Forgot Password Modal -->
+<div id="forgot-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,.8); z-index:2000; align-items:center; justify-content:center;">
+  <div style="background:#1a1a1a; color:#fff; width:90%; max-width:420px; border-radius:10px; padding:24px;">
+    <h2 style="text-align:center; color:#f00;">Reset Password</h2>
+    <p style="text-align:center; color:#ccc; margin-bottom:16px;">Enter your email to receive reset link.</p>
+
+    <input id="forgot-email" type="email" placeholder="Email" 
+      style="width:100%; padding:12px; border:1px solid #444; border-radius:6px; background:#222; color:#fff;">
+
+    <button id="send-reset"
+      style="width:100%; margin-top:14px; padding:12px; border:0; border-radius:6px; background:#f00; color:#fff; font-weight:700; cursor:pointer;">
+      Send Reset Link
+    </button>
+
+    <button id="close-forgot"
+      style="margin-top:10px; width:100%; padding:10px; background:transparent; border:1px solid #666; border-radius:6px; color:#ddd; cursor:pointer;">
+      Cancel
+    </button>
+
+    <p id="forgot-ok" style="display:none; text-align:center; color:#9fe29f; margin-top:10px;">Link sent ✅</p>
+    <p id="forgot-error" style="display:none; text-align:center; color:#ff6b6b; margin-top:10px;">Error sending link</p>
+  </div>
+</div>
+
+<script>
+window.addEventListener('DOMContentLoaded', () => {
+  const modal = document.getElementById("forgot-modal");
+  const openBtn = document.getElementById("open-forgot");
+  const closeBtn = document.getElementById("close-forgot");
+  const sendBtn = document.getElementById("send-reset");
+  const emailInput = document.getElementById("forgot-email");
+  const ok = document.getElementById("forgot-ok");
+  const err = document.getElementById("forgot-error");
+
+  if (!openBtn || !modal) return; // safety
+
+  openBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    modal.style.display = "flex";
+  });
+
+  closeBtn?.addEventListener('click', () => {
+    modal.style.display = "none";
+  });
+
+  // Click outside to close
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) modal.style.display = "none";
+  });
+
+  sendBtn?.addEventListener('click', async () => {
+    ok.style.display = "none";
+    err.style.display = "none";
+
+    const email = emailInput.value.trim();
+    if (!email) {
+      err.textContent = "Please enter your email.";
+      err.style.display = "block";
+      return;
+    }
+
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${location.origin}/reset-password.html`
+      });
+
+      if (error) {
+        err.textContent = error.message;
+        err.style.display = "block";
+      } else {
+        ok.textContent = "Password reset link sent. Check your inbox 📩";
+        ok.style.display = "block";
+      }
+    } catch {
+      err.textContent = "Something went wrong. Try again.";
+      err.style.display = "block";
+    }
+  });
+});
+</script>
+
+
+<!-- Forgot Password Modal -->
+
+</body>
+
+</html>

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Watchlist - Cinemaverse</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Electrolize&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <!-- Unified watchlist API -->
+  <script src="watchlist-api.js"></script>
+
+  <style>
+    body { font-family: 'Electrolize', sans-serif; background:#000; color:#fff; margin:0; }
+    .navbar { display:flex; justify-content:center; align-items:center; padding:10px 20px; background:#000; position:sticky; top:0; z-index:1000; }
+    .logo { font-size:2em; color:#f00; position:absolute; left:20px; }
+    .menu-list { display:flex; gap:0; list-style:none; padding:0; }
+    .menu-list-item a { color:#fff; text-decoration:none; padding:10px 20px; transition:color .3s ease; font-weight:bold; }
+    .menu-list-item a:hover { color:#f00; }
+
+    .page { padding: 20px; }
+    h2 { color:#f00; margin: 20px 0; }
+
+    .movies-list {
+      display:flex; gap:15px; flex-wrap:wrap;
+      padding-bottom:10px;
+    }
+    .movie-item {
+      width:200px; background:#1a1a1a; border-radius:8px; overflow:hidden;
+      box-shadow:0 4px 8px rgba(0,0,0,.2); transition:transform .3s ease, box-shadow .3s ease;
+    }
+    .movie-item:hover { transform:scale(1.05); box-shadow:0 8px 16px rgba(0,0,0,.4); }
+    .movie-item img { width:100%; height:300px; object-fit:cover; display:block; }
+    .movie-item h3 { text-align:center; margin:10px 10px 0; font-size:1.05em; color:#f00; min-height:48px; }
+    .card-actions { display:flex; gap:8px; padding:10px; }
+    .btn {
+      flex:1; padding:10px 8px; border:none; border-radius:6px; font-weight:600; cursor:pointer;
+      color:#fff; background:linear-gradient(135deg, #e60000 0%, #cc0000 100%);
+      transition:all 0.3s ease; font-size:0.9em; text-transform:uppercase; letter-spacing:0.5px;
+      box-shadow:0 4px 12px rgba(230,0,0,0.3);
+    }
+    .btn:hover { 
+      background:linear-gradient(135deg, #ff3333 0%, #e60000 100%);
+      box-shadow:0 6px 16px rgba(230,0,0,0.5);
+      transform:translateY(-2px);
+    }
+    .btn:active { transform:translateY(0); }
+    .btn-outline {
+      background:rgba(255,255,255,0.05); border:1.5px solid rgba(255,0,0,0.4); color:#fff;
+      transition:all 0.3s ease;
+    }
+    .btn-outline:hover { 
+      background:rgba(255,0,0,0.1); 
+      border-color:#f00; 
+      color:#f00;
+      box-shadow:0 4px 12px rgba(255,0,0,0.2);
+      transform:translateY(-2px);
+    }
+    .btn-outline:active { transform:translateY(0); }
+    .empty {
+      color:#bbb; background:#111; border:1px dashed #333; border-radius:10px;
+      padding:30px; text-align:center; margin:20px 0;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Auth helpers + gating -->
+  <script src="auth.js"></script>
+  <script>
+    (async () => {
+      // block page if not logged in
+      await requireAuth();
+      updateAuthUI();
+    })();
+  </script>
+
+  <!-- Nav -->
+  <header class="navbar">
+    <div class="logo">Cinemaverse</div>
+    <ul class="menu-list">
+      <li class="menu-list-item"><a href="index.html">Home</a></li>
+      <li class="menu-list-item"><a href="movies.html">Movies</a></li>
+      <li class="menu-list-item"><a href="series.html">Series</a></li>
+      <li class="menu-list-item"><a href="watchlist.html">Watchlist</a></li>
+      <li class="menu-list-item"><a href="gallery.html">Gallery</a></li>
+      <li class="menu-list-item"><a href="contact.html">Contact Us</a></li>
+      <li class="menu-list-item"><a href="about.html">About Us</a></li>
+      <li class="menu-list-item login-button"><a href="login.html">Login</a></li>
+      <li class="menu-list-item logout-button" style="display:none;"><a href="javascript:void(0)" onclick="logout()">Logout</a></li>
+    </ul>
+  </header>
+
+  <main class="page">
+    <h2>Your Watchlist</h2>
+    <div id="watchlist" class="movies-list"></div>
+    <div id="empty-state" class="empty" style="display:none;">
+      Your watchlist is empty. Go to <a href="movies.html" style="color:#f00;">Movies</a> and add something!
+    </div>
+  </main>
+
+  <script>
+    // Use the unified watchlist API to handle loading/rendering
+    async function _renderOnce() {
+      if (typeof window.renderWatchlist === 'function') {
+        window.renderWatchlist('watchlist', 'empty-state');
+      } else {
+        setTimeout(_renderOnce, 50); // retry if API not loaded yet
+      }
+    }
+    _renderOnce();
+
+    // Re-render on auth changes
+    supabase.auth.onAuthStateChange(() => {
+      updateAuthUI();
+      if (typeof window.renderWatchlist === 'function') {
+        window.renderWatchlist('watchlist', 'empty-state');
+      } else {
+        setTimeout(() => window.renderWatchlist && window.renderWatchlist('watchlist', 'empty-state'), 100);
+      }
+    });
+  </script>
+</body>
+</html>

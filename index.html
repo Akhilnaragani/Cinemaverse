@@ -1,0 +1,1208 @@
+<!DOCTYPE html>
+<html lang=en>
+
+<head>
+    <meta charset=UTF-8>
+    <meta name=viewport content="width=device-width, initial-scale=1.0">
+    <title>Cinemaverse</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Electrolize&family=Indie+Flower&display=swap');
+
+        * {
+            margin: 0
+        }
+
+        body {
+            font-family: 'Electrolize', sans-serif
+        }
+
+        .container {
+            background-color: black;
+            color: white
+        }
+
+        .navbar {
+            background-color: black;
+            height: 50px;
+            color: white;
+            position: sticky;
+            top: 0;
+            z-index: 1
+        }
+
+        .navbar-wrapper {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 100%;
+            padding: 0 50px
+        }
+
+        .logo {
+            color: #ff4646
+        }
+
+        html,
+        body {
+            background-color: black;
+            color: white;
+            height: 100%;
+            margin: 0
+        }
+
+        .menu-list {
+            display: flex;
+            list-style: none;
+            column-gap: 30px;
+            padding: 0
+        }
+
+        .menu-list-item {
+            cursor: pointer
+        }
+
+        .menu-list-item:hover {
+            font-weight: bold
+        }
+
+        .menu-list-item.active {
+            font-weight: bold
+        }
+
+        .profile-container {
+            display: flex;
+            align-items: center;
+            column-gap: 20px
+        }
+
+        .profile-picture {
+            width: 32px;
+            height: 32px;
+            object-fit: cover;
+            border-radius: 50%
+        }
+
+        .profile-text-container {
+            display: flex;
+            align-items: center;
+            column-gap: 5px;
+            line-height: 1
+        }
+
+        .toggle {
+            width: 40px;
+            height: 20px;
+            background-color: white;
+            position: relative;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-around
+        }
+
+        .toggle-icon {
+            color: goldenrod
+        }
+
+        .toggle-ball {
+            width: 18px;
+            height: 18px;
+            background-color: black;
+            border-radius: 50%;
+            cursor: pointer;
+            position: absolute;
+            right: 1px;
+            transition: .5s ease all
+        }
+
+        .sidebar {
+            background-color: black;
+            color: white;
+            height: 100%;
+            width: 50px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 60px;
+            row-gap: 40px;
+            position: fixed;
+            top: 0
+        }
+
+        .sidebar i {
+            color: white;
+            font-size: 20px;
+            cursor: pointer
+        }
+
+        .content-wrapper {
+            margin-left: 50px
+        }
+
+        .featured-content {
+            background: url(spiderman.jpg);
+            padding: 50px;
+            height: calc(100vh - 150px);
+            background-size: 100% 100%
+        }
+
+        .featured-title {
+            width: 400px
+        }
+
+        .featured-desc {
+            width: 500px;
+            background-color: rgba(255, 255, 255, 0.5);
+            padding: 10px;
+            margin: 30px 0;
+            color: black
+        }
+
+        .featured-buttons {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap
+        }
+
+        .featured-buttons button {
+            padding: 10px 25px;
+            border-radius: 2px;
+            border: 0;
+            cursor: pointer;
+            display: flex;
+            column-gap: 10px;
+            font-size: 16px;
+            font-weight: bold
+        }
+
+        .featured-buttons .info-button {
+            background-color: rgb(145, 142, 142, 0.5);
+            color: white
+        }
+
+        .movie-list-filter {
+            margin: 20px 0 20px 50px;
+            padding: 20px
+        }
+
+        .movie-list-filter select {
+            background-color: black;
+            color: white;
+            padding: 7px 0;
+            width: 125px
+        }
+
+        .movie-list-container {
+            margin-left: 70px
+        }
+
+        .movie-list {
+            list-style: none;
+            padding: 0;
+            height: 300px;
+            display: flex;
+            align-items: center;
+            column-gap: 30px;
+            transform: translate(0);
+            transition: 1s all ease ease-in-out
+        }
+
+        .movie-list-wrapper {
+            overflow: hidden;
+            position: relative
+        }
+
+        .movie-item {
+            position: relative
+        }
+
+        .movie-item:hover .movie-item-title,
+        .movie-item:hover .movie-item-buttons {
+            opacity: 1
+        }
+
+        .slider {
+            display: flex;
+            overflow-x: auto;
+            scroll-behavior: smooth
+        }
+
+        .slider::-webkit-scrollbar {
+            display: none
+        }
+
+        .movie-list {
+            display: flex;
+            gap: 16px
+        }
+
+        .movie-item:hover .movie-item-img {
+            transform: scale(1.2);
+            margin: 0 30px;
+            opacity: .5
+        }
+
+        .movie-item-img {
+            width: 270px;
+            height: 200px;
+            object-fit: cover;
+            transition: 1s all ease-in-out
+        }
+
+        .movie-item-title {
+            background-color: rgb(40, 40, 40, 0.4);
+            padding: 0 10px;
+            font-size: 28px;
+            font-weight: bold;
+            position: absolute;
+            top: 10%;
+            left: 50px;
+            opacity: 0;
+            transition: 1s all ease-in-out
+        }
+
+        .movie-item-buttons {
+            background-color: rgb(40, 40, 40, 0.4);
+            padding: 10px;
+            font-weight: bold;
+            position: absolute;
+            bottom: 10%;
+            left: 50px;
+            display: flex;
+            column-gap: 20px;
+            opacity: 0;
+            transition: 1s all ease-in-out
+        }
+
+        .movie-item-buttons i {
+            cursor: pointer;
+            opacity: .5;
+            font-size: 20px;
+            transition: .5s all ease
+        }
+
+        .movie-item-buttons i:hover {
+            opacity: 1
+        }
+
+        .arrow {
+            width: 100px;
+            display: flex;
+            font-size: 120px;
+            position: absolute;
+            right: 0;
+            top: 100px;
+            opacity: .5;
+            transition: .5s ease all;
+            cursor: pointer
+        }
+
+        .arrow:hover {
+            opacity: 1
+        }
+
+        .container.active {
+            background-color: white;
+            color: black
+        }
+
+        .navbar.active {
+            background-color: white;
+            color: black
+        }
+
+        .sidebar.active {
+            background-color: white
+        }
+
+        .sidebar i.active {
+            color: black
+        }
+
+        .movie-list-title.active {
+            color: black
+        }
+
+        .toggle.active {
+            background-color: black
+        }
+
+        .auth-button {
+            display: inline-block;
+            background-color: #f00;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border: 2px solid #b30000;
+            border-radius: 5px;
+            font-size: .9em;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            margin-left: 10px;
+        }
+
+        .auth-button:hover {
+            background-color: #b30000;
+            transform: translateY(-2px);
+        }
+
+        .logout-button {
+            background-color: #333;
+            border-color: #222;
+        }
+
+        .logout-button:hover {
+            background-color: #444;
+        }
+
+        .profile-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .toggle .toggle-ball.active {
+            background-color: white;
+            transform: translate(-20px)
+        }
+
+        .movie-list-filter select.active {
+            background-color: white;
+            color: black
+        }
+
+        @media only screen and (max-width:800px) {
+            .menu-container {
+                display: none
+            }
+
+            .featured.content {
+                height: 50vh
+            }
+
+            .featured-title {
+                width: 200px
+            }
+
+            .featured-desc {
+                overflow: hidden;
+                display: -webkit-box;
+                -webkit-line-clamp: 5;
+                -webkit-box-orient: vertical;
+                max-width: 200px;
+                padding: 0
+            }
+        }
+
+        a {
+            color: white;
+            text-decoration: none
+        }
+
+        a:hover {
+            color: #ff4646
+        }
+
+        button {
+            background: 0;
+            border: 0;
+            color: white;
+            cursor: pointer;/
+        }
+
+        button:hover {
+            background-color: rgba(255, 70, 70, 0.5)
+        }
+
+        .home-slider {
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            height: 60vh;
+            margin-bottom: 20px
+        }
+
+        .slider-wrapper {
+            display: flex;
+            transition: transform .5s ease-in-out
+        }
+
+        .slide {
+            min-width: 100%;
+            position: relative;
+            display: none;
+            flex-shrink: 0
+        }
+
+        .slide.active {
+            display: block
+        }
+
+        .slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover
+        }
+
+        .slide-info {
+            position: absolute;
+            bottom: 20%;
+            left: 10%;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 20px;
+            color: white;
+            max-width: 400px
+        }
+
+        .play-button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            background-color: #f00;
+            color: white;
+            border: 0;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 1em
+        }
+
+        .slider-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(0, 0, 0, 0.5);
+            border: 0;
+            color: white;
+            font-size: 2em;
+            padding: 10px;
+            cursor: pointer
+        }
+
+        .slider-nav.left {
+            left: 10px
+        }
+
+        .slider-nav.right {
+            right: 10px
+        }
+
+        .movie-details {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            justify-content: center;
+            align-items: center;
+            color: white
+        }
+
+        .movie-details-container {
+            display: flex;
+            background-color: #333;
+            padding: 20px;
+            border-radius: 8px
+        }
+
+        .movie-details-left img {
+            max-width: 250px;
+            border-radius: 8px
+        }
+
+        .movie-details-right {
+            margin-left: 20px
+        }
+
+        .movie-details-right h2 {
+            margin-bottom: 10px;
+            color: #e60000
+        }
+
+        #close-details {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #fefe00;
+            color: white;
+            border: 0;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+            width: 100px;
+            text-align: center
+        }
+
+        #close-details:hover {
+            background-color: #df0b0b
+        }
+
+        .movie-modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8)
+        }
+
+        .movie-modal-content {
+            position: relative;
+            margin: auto;
+            top: 5%;
+            width: 90%;
+            max-width: 1200px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            color: #333
+        }
+
+        .close {
+            position: absolute;
+            top: 10px;
+            right: 25px;
+            color: #aaa;
+            font-size: 35px;
+            font-weight: bold
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            cursor: pointer
+        }
+
+        .movie-modal img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-bottom: 20px
+        }
+
+        .movie-modal h2 {
+            font-size: 2em;
+            color: #e50914;
+            text-align: center
+        }
+
+        .movie-modal p {
+            font-size: 1.1em;
+            line-height: 1.6;
+            margin: 15px 0
+        }
+
+        .movie-modal ul {
+            list-style: none;
+            padding-left: 0
+        }
+
+        .movie-modal li {
+            font-size: 1.1em;
+            margin-bottom: 10px
+        }
+
+        .movie-details-right button {
+            width: 250px;
+            padding: 15px 20px;
+            margin-top: 15px;
+            border: 0;
+            border-radius: 30px;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all .3s ease;
+            flex-shrink: 0
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: flex-start;
+            gap: 15px;
+            margin-top: 20px
+        }
+
+        #watch-now {
+            background: linear-gradient(135deg, #ff4d4d, #e60000);
+            color: white;
+            padding: 15px 30px;
+            border: 0;
+            border-radius: 20px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(230, 0, 0, 0.5);
+            transition: background .3s ease, transform .2s ease
+        }
+
+        #watch-now:hover {
+            background: linear-gradient(135deg, #ff6666, #ff3333);
+            transform: scale(1.05)
+        }
+
+        #add-to-watchlist {
+            background: linear-gradient(135deg, #007BFF, #0056b3);
+            color: white;
+            padding: 15px 30px;
+            border: 0;
+            border-radius: 20px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 123, 255, 0.5);
+            transition: background .3s ease, transform .2s ease
+        }
+
+        #add-to-watchlist:hover {
+            background: linear-gradient(135deg, #3399ff, #0056b3);
+            transform: scale(1.05)
+        }
+
+        .user-rating {
+            margin-top: 20px;
+            text-align: center
+        }
+
+        .user-rating .star {
+            font-size: 2em;
+            color: #ccc;
+            cursor: pointer;
+            transition: color .3s ease, transform .2s ease
+        }
+
+        .user-rating .star:hover,
+        .user-rating .star:hover~.star {
+            color: #ccc
+        }
+
+        .user-rating .star:hover~.star,
+        .user-rating .star:hover~.star:hover {
+            transform: none
+        }
+
+        .user-rating .star:hover,
+        .user-rating .star:hover~.star {
+            transform: none
+        }
+
+        .user-rating .star:hover~.star {
+            transform: none
+        }
+
+        .user-rating .star:hover,
+        .user-rating .star.selected {
+            color: gold
+        }
+
+        .user-rating .star.selected:hover {
+            color: gold
+        }
+
+        #rating-feedback {
+            margin-top: 10px;
+            font-size: 1em;
+            color: #ddd
+        }
+
+        #movie-description {
+            margin-bottom: 10px
+        }
+
+        #movie-type {
+            display: inline-block;
+            margin-bottom: 10px
+        }
+
+        #movie-rating {
+            margin-top: 10px;
+            margin-bottom: 20px
+        }
+
+        .footer {
+            background-color: black;
+            color: red;
+            text-align: center;
+            padding: 20px;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+            font-size: 16px;
+            font-weight: bold
+        }
+
+        #welcome-popup {
+            position: fixed;
+            top: -80px;
+            right: 50%;
+            transform: translateX(50%);
+            background: rgba(255, 0, 0, 0.15);
+            backdrop-filter: blur(14px);
+            padding: 14px 26px;
+            border-radius: 12px;
+            color: #ffffff;
+            font-family: 'Electrolize', sans-serif;
+            font-size: 1.2em;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            opacity: 0;
+            transition: all 0.8s ease;
+            z-index: 9999;
+            border: 1px solid rgba(255, 0, 0, 0.3);
+            box-shadow: 0 0 18px rgba(255, 0, 0, 0.35);
+        }
+
+        #welcome-popup.show {
+            top: 30px;
+            opacity: 1;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="auth.js"></script>
+    <script src=movie-details.js defer></script>
+    <script src=series-details.js defer></script>
+    <script src="watchlist-api.js" defer></script>
+    <script>
+        // Initialize auth state as soon as possible
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                console.log('Checking auth state...');
+                const session = await requireAuth();
+                if (!session) {
+                    console.log('No session found, redirecting to login...');
+                    window.location.replace('login.html');
+                    return;
+                }
+                console.log('Session found, updating UI...');
+                await updateAuthUI();
+            } catch (error) {
+                console.error('Auth error:', error);
+                window.location.replace('login.html');
+            }
+        });
+
+        // Watch for auth state changes
+        if (window.supabase) {
+            window.supabase.auth.onAuthStateChange((event, session) => {
+                console.log('Auth state changed:', event);
+                if (event === 'SIGNED_IN') {
+                    updateAuthUI();
+                } else if (event === 'SIGNED_OUT') {
+                    window.location.replace('login.html');
+                }
+            });
+        }
+    </script>
+</head>
+
+<body>
+    <div class=navbar>
+        <div class=navbar-wrapper>
+            <div class=logo-wrapper>
+                <h1 class=logo>Cinemaverse</h1>
+            </div>
+            <div class=menu-container>
+                <ul class=menu-list>
+                    <li class="menu-list-item active"><a href=index.html>Home</a></li>
+                    <li class=menu-list-item><a href=movies.html>Movies</a></li>
+                    <li class=menu-list-item><a href=series.html>Series</a></li>
+                    <li class=menu-list-item><a href=watchlist.html>Watchlist</a></li>
+                    <li class=menu-list-item><a href=gallery.html>Gallery</a></li>
+                    <li class=menu-list-item><a href=contact.html>Contact Us</a></li>
+                    <li class=menu-list-item><a href=about.html>About Us</a></li>
+                    <li class="menu-list-item admin-link" style="display:none;">
+                    <a href="admin.html">Admin</a>
+        </li>
+                </ul>
+            </div>
+
+            <div class=profile-container>
+                <a href="login.html" class="auth-button login-button">Login</a>
+                <a href="javascript:void(0)" onclick="logout()" class="auth-button logout-button"
+                    style="display:none;">Logout</a>
+            </div>
+        </div>
+    </div>
+    <div id="welcome-popup" aria-live="polite"></div>
+    <div class=container>
+        <div class=content-wrapper>
+            <div class=featured-content>
+                <img class=featured-title src="spiderman-title.png" alt>
+                <p class=featured-desc>Peter Parker joins a school trip to Europe, but is recruited by Nick Fury to
+                    stop elemental attacks, and teams up with Mysterio to uncover the truth behind the attacks.</p>
+                <div class=featured-buttons>
+                    <button class=play-button>
+                        <i class="bi bi-play-circle"></i>
+                        Play
+                    </button>
+                    <button class=info-button>
+                        <i class="bi bi-info-circle"></i>
+                        More Info
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class=movie-list-container>
+            <h1 class=movie-list-title>Popular</h1>
+            <div class="movie-list-wrapper slider" id=popular-slider></div>
+            <div class=movie-list-wrapper>
+                <ul class=movie-list>
+                    <li class=movie-item onclick="showMovieDetails('Interstellar')">
+                        <img class=movie-item-img
+                            src=https://image.tmdb.org/t/p/original/djS3XxneEFjCM6VlCiuuN8QavE6.jpg alt=Spider-Man>
+                        <div class=movie-item-info>
+                            <span class=movie-item-title>Interstellar</span>
+                            <p>Rating: ★★★★☆</p>
+                        </div>
+                    <li class=movie-item onclick="showMovieDetails('Avatar')">
+                        <img class=movie-item-img
+                            src=https://m.media-amazon.com/images/I/71W6Yi0j5VL._AC_UF894,1000_QL80_.jpg alt=Spider-Man>
+                        <div class=movie-item-info>
+                            <span class=movie-item-title>Avatar</span>
+                            <p>Rating: ★★★★☆</p>
+                        </div>
+                    </li>
+                    <li class=movie-item onclick="showMovieDetails('Avengers-Endgame')">
+                        <img class=movie-item-img
+                            src=https://ichef.bbci.co.uk/ace/ws/640/cpsprodpb/BF0D/production/_106090984_2e39b218-c369-452e-b5be-d2476f9d8728.jpg.webp
+                            alt=Spider-Man>
+                        <div class=movie-item-info>
+                            <span class=movie-item-title>Avengers-endgame</span>
+                            <p>Rating: ★★★★☆</p>
+                        </div>
+                    </li>
+                    <li class=movie-item onclick="showMovieDetails('Spider-Man: Far From Home')">
+                        <img class=movie-item-img src=https://i.ytimg.com/vi/7gdFQMSiPSw/maxresdefault.jpg
+                            alt=Spider-Man>
+                        <div class=movie-item-info>
+                            <span class=movie-item-title>SPIDER-MAN FAR FROM HOME</span>
+                            <p>Rating: ★★★★☆</p>
+                        </div>
+                    </li>
+                    <li class=movie-item onclick="showMovieDetails('Doctor Strange in the Multiverse of Madness')">
+                        <img class=movie-item-img
+                            src=https://image.tmdb.org/t/p/original/jQ8QGubTbCEcElSPEiySzLYZ2fX.jpg alt=Hulk>
+                        <div class=movie-item-info>
+                            <span class=movie-item-title>Doctor strange in the multiverse of madness</span>
+                            <p>Rating: ★★★★☆</p>
+                        </div>
+                    </li>
+                    <button class="scroll-button right" onclick="scrollRight('popular')">></button>
+                </ul>
+            </div>
+        </div>
+        <div class=movie-list-container>
+            <h1 class=movie-list-title>Top Grossing Movies</h1>
+            <div class="movie-list-wrapper slider" id="Top Grossing Movies"></div>
+            <div class=movie-list-wrapper>
+                <ul class=movie-list>
+                    <li class=movie-item onclick="showMovieDetails('Avengers-Endgame')">
+                        <img class=movie-item-img
+                            src=https://ichef.bbci.co.uk/ace/ws/640/cpsprodpb/BF0D/production/_106090984_2e39b218-c369-452e-b5be-d2476f9d8728.jpg.webp
+                            alt="Avengers Endgame">
+                        <div class=movie-item-info>
+                            <span class=movie-item-title>AVENGERS: ENDGAME</span>
+                            <p>Rating: ★★★★☆</p>
+                        </div>
+                    </li>
+                    <li class=movie-item onclick="showMovieDetails('Oppenheimer')">
+                        <img class=movie-item-img
+                            src="https://www.deccanchronicle.com/h-upload/2024/03/08/1078690-oppenheimer.webp"
+                            alt=Avatar>
+                        <div class=movie-item-info>
+                            <span class=movie-item-title>OPPENHEIMER</span>
+                            <p>Rating: ★★★★☆</p>
+                        </div>
+                    </li>
+                    <li class=movie-item onclick="showMovieDetails('Titanic')">
+                        <img class=movie-item-img
+                            src="https://th.bing.com/th/id/OIP.w5yfrTQcJGzTVNmEVdYjuAHaEK?rs=1&pid=ImgDetMain"
+                            alt=Titanic>
+                        <div class=movie-item-info>
+                            <span class=movie-item-title>TITANIC</span>
+                            <p>Rating: ★★★★☆</p>
+                        </div>
+                    </li>
+                    <li class=movie-item onclick="showMovieDetails('Star Wars: The Force Awakens')">
+                        <img class=movie-item-img
+                            src="https://th.bing.com/th/id/OIP.Cw1RQu0ThshuBG6G0WQVkQHaFj?rs=1&pid=ImgDetMain"
+                            alt="Star Wars: The Force Awakens">
+                        <div class=movie-item-info>
+                            <span class=movie-item-title>STAR WARS: THE FORCE AWAKENS</span>
+                            <p>Rating: ★★★★☆</p>
+                        </div>
+                    </li>
+                    <li class=movie-item onclick="showMovieDetails('JURASSIC WORLD')">
+                        <img class=movie-item-img
+                            src="https://th.bing.com/th/id/OIP.GNUS8r4ETlZttklKiYFzcQHaEo?rs=1&pid=ImgDetMain"
+                            alt="Jurassic World">
+                        <div class=movie-item-info>
+                            <span class=movie-item-title>JURASSIC WORLD</span>
+                            <p>Rating: ★★★★☆</p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class=movie-list-container>
+            <h1 class=movie-list-title>Top Rated Movies</h1>
+            <div class="movie-list-wrapper slider" id="Top Rated Movies"></div>
+            <div class=movie-list-wrapper>
+                <ul class=movie-list>
+                    <li class=movie-item onclick="showMovieDetails('The Shawshank Redemption')">
+                        <img class=movie-item-img
+                            src="https://resizing.flixster.com/SzNzBSg0ezjiN6IEHyeZ-fF1aqU=/fit-in/705x460/v2/https://resizing.flixster.com/-XZAfHZM39UwaGJIFWKAE8fS0ak=/v3/t/assets/p15987_v_h9_at.jpg"
+                            alt="The Shawshank Redemption">
+                        <div class=movie-item-info>
+                            <span class=movie-item-title>THE SHAWSHANK REDEMPTION</span>
+                        </div>
+                    </li>
+                    <li class=movie-item onclick="showMovieDetails('The Godfather')">
+                        <img class=movie-item-img
+                            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqDMhkR0minR9Ze99dS1q0iuFNIhnhYNNiTw&s"
+                            alt="The Godfather">
+                        <div class=movie-item-info>
+                            <span class=movie-item-title>THE GODFATHER</span>
+                            <p>Rating: ★★★★☆</p>
+                    </li>
+                    <li class=movie-item onclick="showMovieDetails('The Dark Knight')">
+                        <img class=movie-item-img
+                            src="https://th.bing.com/th/id/OIP.69uwwQxo_iLSSA0vt9Lb0wHaE7?rs=1&pid=ImgDetMain"
+                            alt="The Dark Knight">
+                        <div class=movie-item-info>
+                            <span class=movie-item-title>THE DARK KNIGHT</span>
+                            <p>Rating: ★★★★★</p>
+                        </div>
+                    </li>
+                    <li class=movie-item onclick="showMovieDetails('Inception')">
+                        <img class=movie-item-img
+                            src=https://image.tmdb.org/t/p/original/zSBVQIvx4UIHoFf1oDvixHyIQrz.jpg alt=Inception>
+                        <div class=movie-item-info>
+                            <span class=movie-item-title>INCEPTION</span>
+                            <p>Rating: ★★★★★</p>
+                        </div>
+                    </li>
+                    <li class=movie-item onclick="showMovieDetails('Fight Club')">
+                        <img class=movie-item-img
+                            src="https://th.bing.com/th/id/OIP.nzv_EHs7aTnsWi61O3OAIwHaEo?rs=1&pid=ImgDetMain"
+                            alt="Fight Club">
+                        <div class=movie-item-info>
+                            <span class=movie-item-title>FIGHT CLUB</span>
+                            <p>Rating: ★★★★☆</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class=movie-list-container>
+            <h1 class=movie-list-title>In Telugu</h1>
+            <div class="movie-list-wrapper slider" id="Top Rated Movies"></div>
+            <div class=movie-list-wrapper>
+                <ul class=movie-list>
+                    <li class=movie-item onclick="showMovieDetails('RRR')">
+                        <img class=movie-item-img
+                            src=https://img.etimg.com/thumb/width-640,height-480,imgsize-115038,resizemode-75,msid-90500113/industry/media/entertainment/rrr-reaches-rs-500-crore-worldwide-milestone/rrr-box-office-collection.jpg
+                            alt=RRR>
+                        <div class=movie-item-info>
+                            <span class=movie-item-title>RRR</span>
+                            <p>Rating: ★★★★☆</p>
+                        </div>
+                    </li>
+                    <li class=movie-item onclick="showMovieDetails('Baahubali')">
+                        <img class=movie-item-img
+                            src=https://img.etimg.com/thumb/msid-58275512,width-640,resizemode-4/entertainment/baahubali-characters/baahubali1.jpg
+                            alt=Baahubali>
+                        <div class=movie-item-info>
+                            <span class=movie-item-title>BAAHUBALI</span>
+                            <p>Rating: ★★★★☆</p>
+                        </div>
+                    </li>
+                    <li class=movie-item onclick="showMovieDetails('Pushpa')">
+                        <img class=movie-item-img
+                            src=https://1.bp.blogspot.com/-p1JKXAG6yi8/YNhQVtGsPwI/AAAAAAAAA5s/6ANoxm1wKr80QUDUdk0dQQs28Pb74ngUgCLcBGAsYHQ/w1200-h630-p-k-no-nu/images%25284%2529.jpg
+                            alt=Pushpa>
+                        <div class=movie-item-info>
+                            <span class=movie-item-title>Pushpa: The Rise</span>
+                            <p>Rating: ★★★★☆</p>
+                    </li>
+                    <li class=movie-item onclick="showMovieDetails('Arjun Reddy')">
+                        <img class=movie-item-img src=https://cdn.siasat.com/wp-content/uploads/2020/08/Arjun-Reddy.jpg
+                            alt="Arjun Reddy">
+                        <div class=movie-item-info>
+                            <span class=movie-item-title>Arjun Reddy</span>
+                            <p>Rating: ★★★★☆</p>
+                    </li>
+                    <li class=movie-item onclick="showMovieDetails('Devara')">
+                        <img class=movie-item-img
+                            src="https://th.bing.com/th/id/OIP.DsrDWlBiw_goGWIX4gAP6gHaEc?w=968&h=580&rs=1&pid=ImgDetMain"
+                            alt="Arjun Reddy">
+                        <div class=movie-item-info>
+                            <span class=movie-item-title>Devara</span>
+                            <p>Rating: ★★★★☆</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class=movie-list-container>
+            <h1 class=movie-list-title>Anime</h1>
+            <div class=movie-list-wrapper>
+                <ul class=movie-list>
+                    <li class=movie-item onclick="showMovieDetails('One-Piece')">
+                        <img class=movie-item-img
+                            src="https://imgsrv.crunchyroll.com/cdn-cgi/image/fit=contain,format=auto,quality=85,width=1200,height=675/catalog/crunchyroll/a249096c7812deb8c3c2c907173f3774.jpg"
+                            alt="One Piece">
+                        <div class=movie-item-info>
+                            <span class=movie-item-title>'One-Piece</span>
+                            <p>Rating: ★★★★★</p>
+                        </div>
+                    </li>
+                    <li class=movie-item onclick="showMovieDetails('Attack on Titan')">
+                        <img class=movie-item-img
+                            src="https://th.bing.com/th/id/OIP.R32ULBR-SS3TQdtWPuezMgHaFj?rs=1&pid=ImgDetMain"
+                            alt=Naruto>
+                        <div class=movie-item-info>
+                            <span class=movie-item-title>ATTACK ON TITAN</span>
+                            <p>Rating: ★★★★★</p>
+                        </div>
+                    </li>
+                    <li class=movie-item onclick="showMovieDetails('Jujutsu Kaisen')">
+                        <img class=movie-item-img src=https://simkl.net/fanart/98/9800690e668863a2e_0.jpg alt=Naruto>
+                        <div class=movie-item-info>
+                            <span class=movie-item-title>JUJUTSU KAISEN</span>
+                            <p>Rating: ★★★★★</p>
+                    </li>
+                    <li class=movie-item onclick="showMovieDetails('Bleach-TYBW')">
+                        <img class=movie-item-img
+                            src=https://www.screennearyou.com/wp-content/uploads/2023/07/p23157412_b_h8_aa.webp
+                            alt=Naruto>
+                        <div class=movie-item-info>
+                            <span class=movie-item-title>BLEACH</span>
+                            <p>Rating: ★★★★★</p>
+                        </div>
+                    </li>
+                    <li class=movie-item onclick="showMovieDetails('Tokyo Ghoul')">
+                        <img class=movie-item-img
+                            src=https://de7i3bh7bgh0d.cloudfront.net/2016/08/01/23/58/02/77e5f438-801c-4d04-9d8b-b9795cd5b5ad/TokyoGhoul01_BlogSplash_1200x630.jpg
+                            alt=Naruto>
+                        <div class=movie-item-info>
+                            <span class=movie-item-title>TOKYO GHOUL</span>
+                            <p>Rating: ★★★★★</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <section id=movie-details class=movie-details>
+        <div class=movie-details-container>
+            <div class=movie-details-left>
+                <img id=movie-poster src alt="Movie Poster">
+            </div>
+            <div class=movie-details-right>
+                <h2 id=movie-title></h2>
+                <p id=movie-description></p>
+                <p><strong>Genre:</strong> <span id=movie-type></span></p>
+                <div id=movie-rating>
+                    <p><strong>Rating:</strong> <span id=rating-value></span></p>
+                </div>
+                <div class=button-container>
+                    <button id=watch-now onclick=watchNow()>Watch Now</button>
+                    <button id=add-to-watchlist onclick=addToWatchlist()>Add to Watchlist</button>
+                </div>
+                <div id=user-rating class=user-rating>
+                    <span class=star data-value=1>&#9733;</span>
+                    <span class=star data-value=2>&#9733;</span>
+                    <span class=star data-value=3>&#9733;</span>
+                    <span class=star data-value=4>&#9733;</span>
+                    <span class=star data-value=5>&#9733;</span>
+                    <p id=rating-feedback>Rate this movie!</p>
+                </div>
+                <button id=close-details>Close</button>
+            </div>
+        </div>
+    </section>
+    <script>
+        // Keep simple playback helper. Legacy addToWatchlist functions removed — use the page's forwarding shim.
+        function watchNow() { const movieTitle = document.getElementById('movie-title').innerText; alert(`You are now watching ${movieTitle}!`); }
+
+        document.querySelectorAll('.star').forEach(star => { star.addEventListener('click', function () { const ratingValue = this.getAttribute('data-value'); document.getElementById('rating-value').innerText = ratingValue; document.getElementById('rating-feedback').innerText = `You rated this movie ${ratingValue}star${ratingValue > 1 ? 's' : ''}!`; }); }); document.getElementById('close-details').addEventListener('click', function () { document.getElementById('movie-details').style.display = 'none'; }); function autoSlideSlider(sliderId) {
+            const slider = document.getElementById(sliderId); let scrollAmount = 0; const slideInterval = 3000; const step = 2; function slide() { scrollAmount += step; slider.scrollBy(step, 0); if (scrollAmount >= slider.scrollWidth - slider.offsetWidth) { scrollAmount = 0; slider.scrollTo(0, 0); } }
+            setInterval(slide, 30);
+        }
+        autoSlideSlider('popular-slider');
+    </script>
+    <!-- <script>function showMovieDetails(movieName) {
+            const movieDetails = { "Deadpool and Wolverine": { title: "Deadpool and Wolverine", description: "Deadpool and Wolverine team up for hilarious, action-packed adventures against formidable foes", type: "Action", poster: "https://upload.wikimedia.org/wikipedia/en/4/4c/Deadpool_%26_Wolverine_poster.jpg", rating: 4.5 }, "Avengers-Endgame": { title: "Avengers: Endgame", description: "The epic conclusion to the Avengers saga, featuring heroes", type: "Action", poster: "https://image.tmdb.org/t/p/original/z0gRHPKq0uX2YY5YqKRLiRCoBqN.jpg", rating: 4.7 }, "Avengers-Infinity War": { title: "Avengers: Infinity War", description: "The Avengers face the most powerful villain yet...", type: "Action", poster: "https://imageio.forbes.com/blogs-images/markhughes/files/2018/04/DOLBY-Exclusive-AVENGERS-INFINITY-WAR-poster-1-1200x1753.jpg?format=jpg&height=900&width=1600&fit=bounds", rating: 4.8 }, "Deadpool": { title: "Deadpool", description: "A fast-talking mercenary with a mutant healing factor...", type: "Action", poster: "https://picfiles.alphacoders.com/459/thumb-1920-459864.jpg", rating: 4.6 }, "Avengers-Civil-War": { title: "Avengers: Civil War", description: "The Avengers are divided over government regulations...", type: "Action", poster: "https://i.pinimg.com/originals/24/4e/46/244e46f572815c0c6a0a39976458e4a3.png", rating: 4.5 }, "Avatar": { title: "Avatar", description: "A paraplegic Marine dispatched to the moon Pandora...", type: "Action", poster: "https://static.javatpoint.com/best/images/best-english-movies3.png", rating: 4.3 }, "Interstellar": { title: "Interstellar", description: "A team of explorers travel through a wormhole in space...", type: "Sci-Fi", poster: "https://th.bing.com/th/id/OIP.jVVUF1D1uEuSPvQtvM5uXgHaLH?rs=1&pid=ImgDetMain", rating: 4.6 }, "Venom The Last Dance": { title: "Venom The Last Dance", description: "The sequel to the hit movie Venom, exploring new challenges...", type: "Action", poster: "https://th.bing.com/th/id/OIP.uXqZ7t6xWYixmD7A8GL3gAHaJQ?rs=1&pid=ImgDetMain", rating: 4.2 }, "Deadpool and Wolverine": { title: "Deadpool and Wolverine", description: "Deadpool and Wolverine team up for hilarious, action-packed adventures against formidable foes", type: "Action", poster: "https://upload.wikimedia.org/wikipedia/en/4/4c/Deadpool_%26_Wolverine_poster.jpg", rating: 4.5 }, "Spider-Man: Beyond the Spider-Verse": { title: "Spider-Man: Beyond the Spider-Verse", description: "The next chapter in the Spider-Verse saga...", type: "Animation", poster: "https://th.bing.com/th/id/OIP.bHwsgAP2PaLkXf6JaGL3SAHaLl?rs=1&pid=ImgDetMain", rating: 4.6 }, "Killers of the Flower Moon": { title: "Killers of the Flower Moon", description: "A historical crime drama based on true events...", type: "Crime", poster: "https://static1.srcdn.com/wordpress/wp-content/uploads/2023/05/killers-of-the-flower-moon-movie-poster.jpg", rating: 4.4 }, "Oppenheimer": { title: "Oppenheimer", description: "The story of the father of the atomic bomb,christopher Nolan's Masterpiece", type: "Biography", poster: "https://static1.srcdn.com/wordpress/wp-content/uploads/2023/05/oppenheimer-poster.jpg", rating: 4.8 }, "The Shawshank Redemption": { title: "The Shawshank Redemption", description: "Two imprisoned men bond over a number of years...", type: "Drama", poster: "https://th.bing.com/th/id/OIP.8Xe5VESw3PeHepirT89BXgHaLA?rs=1&pid=ImgDetMain", rating: 4.9 }, "The Godfather": { title: "The Godfather", description: "An organized crime dynasty's aging patriarch transfers control...", type: "Crime", poster: "https://m.media-amazon.com/images/M/MV5BM2MyNjYxNmUtYTAwNi00MTYxLWJmNWYtYzZlODY3ZTk3OTFlXkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_.jpg", rating: 4.8 }, "The Dark Knight": { title: "The Dark Knight", description: "When the menace known as the Joker emerges from his mysterious past...", type: "Action", poster: "https://th.bing.com/th/id/OIP.NN9rKH-vZbFgtH4FuoW7OwHaLH?rs=1&pid=ImgDetMain", rating: 4.7 }, "Inception": { title: "Inception", description: "A thief who steals corporate secrets through the use of dream-sharing technology...", type: "Sci-Fi", poster: "https://flxt.tmsimg.com/assets/p7825626_p_v8_af.jpg", rating: 4.6 }, "Fight Club": { title: "Fight Club", description: "An insomniac office worker and a devil-may-care soap maker form an underground fight club...", type: "Drama", poster: "https://th.bing.com/th/id/OIP.mNTGxbXX5A0mtqAZuFdK_QHaKb?rs=1&pid=ImgDetMain", rating: 4.5 }, "The Matrix": { title: "The Matrix", description: "A computer hacker learns from mysterious rebels about the true nature of his reality...", type: " Sci-Fi", poster: "https://th.bing.com/th/id/OIP.gjF_px0_PyPzmI2fButiWAHaLH?rs=1&pid=ImgDetMain", rating: 4.7 }, "The Hangover": { title: "The Hangover", description: "Three buddies wake up from a bachelor party in Las Vegas, with no memory of the previous night...", type: "Comedy", poster: "https://m.media-amazon.com/images/I/81GGqDdrBbL._AC_UF1000,1000_QL80_.jpg", rating: 4.2 }, "3 Idiots": { title: "3 Idiots", description: "Two friends search for their long-lost companion...", type: "Comedy", poster: "https://m.media-amazon.com/images/M/MV5BNzc4ZWQ3NmYtODE0Ny00YTQ4LTlkZWItNTBkMGQ0MmUwMmJlXkEyXkFqcGc@._V1_.jpg", rating: 4.5 }, "Chennai Express": { title: "Chennai Express", description: "A man travels to Chennai to fulfill his grandfather's last wish...", type: "Comedy", poster: "https://m.media-amazon.com/images/M/MV5BNDM5ZWM2ZTktZTM5My00NGQzLWFkYmItZjAyNDU0ZTliOGIyXkEyXkFqcGc@._V1_.jpg", rating: 4.1 }, "BAD BOYS": { title: "BAD BOYS", description: "Two hip detectives protect a witness to a murder while investigating a case of stolen heroin...", type: "Action", poster: "https://akamaividz2.zee5.com/image/upload/w_756,h_1134,c_scale,f_webp,q_auto:eco/resources/0-0-1z5598404/portrait/1920x770cfa7eb8c98554371afd749daf06d2711.jpg", rating: 4.3 }, "Jumanji": { title: "Jumanji", description: "Four teenagers are sucked into a magical video game, and the only way they can escape is to finish the game...", type: "Adventure", poster: "https://media5.bollywoodhungama.in/wp-content/uploads/2017/11/Jumanji-Welcome-to-The-Jungle-English-01-306x393.jpg", rating: 4.4 }, "The Conjuring": { title: "The Conjuring", description: "Paranormal investigators help a family terrorized by a dark presence in their farmhouse...", type: "Horror", poster: "https://m.media-amazon.com/images/I/5147F62RsML._AC_UF1000,1000_QL80_.jpg", rating: 4.5 }, "It": { title: "It", description: "A group of bullied kids band together when a monster, taking the appearance of a clown, begins hunting children...", type: "Horror", poster: "https://upload.wikimedia.org/wikipedia/en/5/5a/It_%282017%29_poster.jpg", rating: 4.3 }, "Bhoot": { title: "Bhoot", description: "A couple moves into a haunted apartment and experiences terrifying events...", type: "Horror", poster: "https://m.media-amazon.com/images/S/pv-target-images/d46d0637150ef6e198b748df745d024015cbd60604e16db5d48a6b5c170210e2.jpg", rating: 4.0 }, "Pari": { title: "Pari", description: "A couple's life turns upside down when they encounter a mysterious woman...", type: "Horror", poster: "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBxMTEhUTEhMVFRUXGBcYFxUXFRcVFRUYFxkXHRgXGBYYHSggGB0lGxgVITEhJSkrLi4uFx8zODMtNygtLisBCgoKDg0OGhAQFy0dHR0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLTctLS0tLS0rLS0tLS0", }, "Hereditary": { title: "Hereditary", description: "A grieving family is haunted by tragic and disturbing occurrences...", type: "Horror", poster: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSf0BGV-QeuIdai0XgNOBEhJxn5pUn5fYAj5Q&s", rating: 4.3 }, "Chak De! India": { title: "Chak De! India", description: "A former hockey player coaches the Indian women's national team...", type: "Sports", poster: "https://m.media-amazon.com/images/M/MV5BMTUxNDIxNDYwNl5BMl5BanBnXkFtZTgwMzgxMDg0MzE@._V1_.jpg", rating: 4.6 }, "M.S. Dhoni: The Untold Story": { title: "M.S. Dhoni: The Untold Story", description: "The biopic of Indian cricketer Mahendra Singh Dhoni...", type: "Biography", poster: "https://m.media-amazon.com/images/M/MV5BM2UwZTNkMmItYmYzOS00MTk3LTg3NDgtNzg5ZjYxNTIzNzY4XkEyXkFqcGc@._V1_.jpg", rating: 4.5 }, "Rudy": { title: "Rudy", description: "The story of Rudy Ruettiger, who dreams of playing football at Notre Dame...", type: "Sports", poster: "https://resizing.flixster.com/-XZAfHZM39UwaGJIFWKAE8fS0ak=/v3/t/assets/p15066_p_v10_ac.jpg", rating: 4.7 }, "Remember the Titans": { title: "Remember the Titans", description: "The true story of a high school football team in Virginia during the early 1970s...", type: "Sports", poster: "https://m.media-amazon.com/images/M/MV5BMTczNTA2MDc0OF5BMl5BanBnXkFtZTYwMTg4MDY2._V1_.jpg", rating: 4.8 }, "Fighting with My Family": { title: "Fighting with My Family", description: "A former wrestler's family makes a living performing at small venues...", type: "Comedy", poster: "https://m.media-amazon.com/images/M/MV5BYjliMDY3N2YtOTI2NS00MjQ0LWFjOGItMjQ1MzYyZGVlMDJiXkEyXkFqcGc@._V1_.jpg", rating: 4.4 }, "3-Idiots": { title: "3 Idiots", description: "Two friends search for their long-lost companion, a college student who inspired them to think differently.", type: "Comedy", poster: "https://m.media-amazon.com/images/M/MV5BNzc4ZWQ3NmYtODE0Ny00YTQ4LTlkZWItNTBkMGQ0MmUwMmJlXkEyXkFqcGc@._V1_.jpg", rating: 4.5 }, "One-Piece": { title: "One-Piece", description: "Follow the adventures of Monkey D. Luffy and his pirate crew in order to find the greatest treasure ever left by the legendary Pirate, Gold Roger.", type: "Adventure", poster: "https://imgsrv.crunchyroll.com/cdn-cgi/image/fit=contain,format=auto,quality=85,width=480,height=720/catalog/crunchyroll/757bae5a21039bac6ebace5de9affcd8.jpg", rating: 4.8 }, "SPIDER-MAN FAR FROM HOME": { title: "Spider-Man: Far From Home", description: "Following the events of Avengers: Endgame, Peter Parker goes on a school trip to Europe but is soon called into action to face new threats.", type: "Action/Adventure", poster: "https://image.tmdb.org/t/p/w500/2f1bB6bY2Y1q0D2k6aL1Q1f0y7m.jpg", rating: 4.5 }, "Doctor Strange in the Multiverse of Madness": { title: "Doctor Strange in the Multiverse of Madness", description: "Doctor Strange, with the help of allies old and new, traverses the multiverse to confront a mysterious new adversary.", type: "Action/Fantasy", poster: "https://image.tmdb.org/t/p/w500/7B6v6nW0Yp4t8c4d1i5sAqH4K3L.jpg", rating: 4.4 }, "TITANIC": { title: "Titanic", description: "A seventeen-year-old aristocrat falls in love with a kind but poor artist aboard the luxurious, ill-fated R.M.S. Titanic.", type: "Romance/Drama", poster: "https://image.tmdb.org/t/p/w500/3g8k8v0KZ2i7G8r9L4fG8H7M7qQ.jpg", rating: 4.8 }, "STAR WARS: THE FORCE AWAKENS": { title: "Star Wars: The Force Awakens", description: "As a new threat rises, Rey, a scavenger from the desert planet Jakku, is caught up in the battle between the Resistance and the First Order.", type: "Action/Sci-Fi", poster: "https://image.tmdb.org/t/p/w500/8uE8R5i5D4uM8g0VbQkB6K5c5gU.jpg", rating: 3.5 }, "JURASSIC WORLD": { title: "Jurassic World", description: "A new theme park, built on the original site of Jurassic Park", type: "Action/Adventure", poster: "https://m.media-amazon.com/images/M/MV5BOTBjMjA4NmYtN2RjMi00YWZlLTliYTktOTIwMmNkYjYxYmE1XkEyXkFqcGdeQXVyODE5NzE3OTE@._V1_FMjpg_UX1000_.jpg", rating: 4.7 }, "RRR": { title: "RRR", description: "A fictional story about two legendary revolutionaries and their journey away from home before they started fighting for their country in the 1920s.", type: "Action/Drama", poster: "https://image.tmdb.org/t/p/w500/2lG7H2VZ7N5s4Z1A0f0D6g5t8P2.jpg", rating: 4.5 }, "BAAHUBALI": { title: "Baahubali: The Beginning", description: "In ancient India, an adventurous man becomes involved in a decades-old feud between two warring brothers.", type: "Action/Drama", poster: "https://image.tmdb.org/t/p/w500/2lG7H2VZ7N5s4Z1A0f0D6g5t8P2.jpg", rating: 4.0 }, "Pushpa: The Rise": { title: "Pushpa: The Rise", description: "A laborer rises through the ranks of a smuggling syndicate, but his ascent is met with challenges from law enforcement and rival gangs.", type: "Action/Thriller", poster: "https://image.tmdb.org/t/p/w500/8uE8R5i5D4uM8g0VbQkB6K5c5gU.jpg", rating: 4.5 }, "Arjun Reddy": { title: "Arjun Reddy", description: "A hot-headed surgeon deals with heartbreak and self-destruction after his girlfriend is forced to marry someone else.", type: "Romance/Drama", poster: "https://image.tmdb.org/t/p/w500/3g8k8v0KZ2i7G8r9L4fG8H7M7qQ.jpg", rating: 4.0 }, "Devara": { title: "Devara", description: "The story revolves around a powerful deity who must protect his land from dark forces ", type: "Action/Drama", poster: "https://www.cinejosh.com/newsimg/newsmainimg/ntr-intense-training-for-devara-stunts_b_2808230507.jpg", rating: 4.2 }, "Attack on Titan": { title: "Attack on Titan", description: "In a world where humanity resides within enormous walled cities to protect themselves from Titans, a young boy joins the military to fight against these monstrous beings.", type: "Action, Fantasy", poster: "https://th.bing.com/th/id/OIP.VJ-yiseFyWf8mezviQ3BUAAAAA?rs=1&pid=ImgDetMain", rating: 4.8 }, "Spider-Man: Far From Home": { title: "Spider-Man: Far From Home", description: "Peter Parker goes on a school trip to Europe, but his plans are interrupted by the arrival of a new threat.", type: "Action", poster: "https://image.tmdb.org/t/p/original/i0nzOT8reCr4lLa7LaKqfxfVnIx.jpg", rating: 4.5 }, "Haikyuu: The Dumpster Battle": { title: "Haikyuu: The Dumpster Battle", description: "The story continues as the volleyball team faces new challenges and rivals in their quest for victory.", type: "Animation", poster: "https://pics.filmaffinity.com/Haikyuu_The_Dumpster_Battle-238781756-large.jpg", rating: 4.7 }, "Blue Lock Episode - Nagi": { title: "Blue Lock Episode - Nagi", description: "Follow the journey of Nagi as he navigates the intense world of competitive soccer in the Blue Lock program.", type: "Animation", poster: "https://catalogo.mangame.it/M/B/blue_lock_episode_nagi_1.png", rating: 4.6 }, "Get Out": { title: "Get Out", description: "A young African-American man discovers unsettling secrets when he meets his white girlfriend's family.", type: "Horror", poster: "https://posterspy.com/wp-content/uploads/2018/04/Poster-2017-Get-Out-II-2-Commercial-1200x1703.jpg", rating: 4.8 }, "A Quiet Place": { title: "A Quiet Place", description: "In a post-apocalyptic world, a family must live in silence to avoid blind monsters with acute hearing.", type: "Horror", poster: "https://www.themoviedb.org/t/p/original/xVmLPidcJiykszAHIXCWPw3s2Y7.jpg", rating: 4.5 }, "The Babadook": { title: "The Babadook", description: "A single mother and her son are haunted by a sinister presence that emerges from a mysterious book.", type: "Horror", poster: "https://th.bing.com/th/id/OIP.qYZ_oH-r5EHEKpbFvZCKfwHaK6?rs=1&pid=ImgDetMain", rating: 4.3 }, "Kalki": { title: "Kalki", description: "A gripping tale that explores the life and challenges faced by a woman named Kalki, who embarks on a journey of self-discovery and empowerment.", type: "Drama", poster: "https://static1.colliderimages.com/wordpress/wp-content/uploads/sharedimages/2024/04/kalki-2898-ad-temp-movie-poster.jpg", rating: 4.2 }, "Doctor Strange in the Multiverse of Madness": { title: "Doctor Strange in the Multiverse of Madness", description: "Doctor Strange, with the help of allies both old and new", type: "Action, Adventure, Fantasy", poster: "https://th.bing.com/th/id/OIP.dhJxJdL8Xqgh5BNiXSibKwHaK-?rs=1&pid=ImgDetMain", rating: 4.0 }, "Star Wars: The Force Awakens": { title: "Star Wars: The Force Awakens", description: "Rey teams up with Finn and Han to stop the First Order", type: "Action, Adventure, Sci-Fi", poster: "https://th.bing.com/th/id/OIP.BFIoAiejWxlUgGbEnOFzhAHaLH?rs=1&pid=ImgDetMain", rating: 4.5 }, "Titanic": { title: "Titanic", description: "A doomed romance unfolds aboard the ill-fated RMS Titanic ship.", type: "Drama, Romance", poster: "https://th.bing.com/th/id/OIP.aMEiA7fmAM0bHtCOpelwbgHaKj?rs=1&pid=ImgDetMain", rating: 4.7 }, "RRR": { title: "RRR", description: "A fictional story set in the 1920s about two legendary revolutionaries and their journey away from home before they started fighting for their country.", type: "Action, Drama, History", poster: "https://th.bing.com/th/id/OIP.MgQUlkAWtm6_DL-pSz-NnAHaLH?rs=1&pid=ImgDetMain", rating: 4.8 }, "Pushpa": { title: "Pushpa: The Rise", description: "A laborer rises through the ranks of the red sandalwood smuggling syndicate, leading to conflict with law enforcement and rival gangs.", type: "Action, Drama, Thriller", poster: "https://image.tmdb.org/t/p/original/r1yAzVQNbCbPTbB3GZFour9Qr0t.jpg", rating: 4.6 }, "Arjun Reddy": { title: "Arjun Reddy", description: "A hot-headed surgeon's life takes a turn for the worse after his girlfriend is forced to marry someone else.", type: "Drama, Romance", poster: "https://media.gqindia.com/wp-content/uploads/2020/04/Arjun-Reddy.jpg", rating: 4.5 }, "Baahubali": { title: "Baahubali: The Beginning", description: "In ancient India, a young man discovers his heritage and sets out to reclaim his kingdom from a tyrannical ruler.", type: "Action, Drama, Fantasy", poster: "https://th.bing.com/th/id/OIP.aiqbPQzRMgVu0gnIwCqBLwHaJ4?rs=1&pid=ImgDetMain", rating: 4.6 }, "Jujutsu Kaisen": { title: "Jujutsu Kaisen", description: "A high school student joins a secret organization to combat supernatural threats and curses.", type: "Anime", poster: "https://th.bing.com/th/id/OIP.Hn0TEwPFdZozpA9klAFKCwAAAA?rs=1&pid=ImgDetMain", rating: 4.6 }, "Bleach-TYBW": { title: "Bleach: TYBW", description: "Ichigo Kurosaki's life as a soul reaper continues in the Thousand-Year Blood War arc.", type: "Anime", poster: "https://th.bing.com/th/id/OIP.LE-6ZSy1TpNPJYV_hIby3QHaKe?rs=1&pid=ImgDetMain", rating: 4.4 }, "Tokyo Ghoul": { title: "Tokyo Ghoul", description: "A college student is transformed into a half-ghoul and must navigate the dangerous world between humans and flesh-eating ghouls.", type: "Dark Fantasy, Horror, Seinen", poster: "https://th.bing.com/th/id/OIP.puR-0yoH2KALEttlH4BBswHaKn?rs=1&pid=ImgDetMain", rating: 4.5 } }
+            document.getElementById("close-details").addEventListener("click", function () { document.getElementById("movie-details").style.display = "none"; }); function watchNow() { alert("Starting movie playback... Enjoy the show!"); }
+            // Inline legacy addToWatchlist removed — forwarding shim at the end of the file handles delegation.
+            document.querySelectorAll('.user-rating .star').forEach(star => { star.addEventListener('click', function () { const value = this.getAttribute('data-value'); setRating(movieName, value); }); }); function setRating(movieName, rating) {
+                movieDetails[movieName].rating = rating; document.querySelectorAll('.user-rating .star').forEach(star => { star.classList.remove('selected'); }); for (let i = 1; i <= rating; i++) { document.querySelector(`.user-rating.star[data-value="${i}"]`).classList.add('selected'); }
+                document.getElementById('rating-feedback').textContent = `You rated this movie ${rating}stars!`; localStorage.setItem("movieDetails", JSON.stringify(movieDetails));
+            }
+            // Removed page-local watchlist and duplicate addToWatchlist implementations to standardize behavior.
+            window.onload = function () { const savedDetails = localStorage.getItem("movieDetails"); if (savedDetails) { movieDetails = JSON.parse(savedDetails); } }; const details = movieDetails[movieName]; if (details) { document.getElementById("movie-title").textContent = details.title; document.getElementById("movie-description").textContent = details.description; document.getElementById("movie-type").textContent = details.type; document.getElementById("movie-poster").src = details.poster; document.getElementById("rating-value").textContent = details.rating; document.getElementById("movie-details").style.display = "flex"; } else { console.error("Movie not found:", movieName); }
+        }
+        document.getElementById("close-details").addEventListener("click", function () { document.getElementById("movie-details").style.display = "none"; });</script> -->
+
+</html>
+</script>
+<!-- Make sure supabase-js is loaded once (usually in <head>) and auth.js is included before this -->
+<script>
+    // Attach a +Watchlist button to every .movie-item on the pag
+
+    // Inserts a row into Supabase watchlist for the current user
+    // Forwarding shim: prefer the unified watchlist API (watchlist-api.js)
+    async function addToWatchlist(movieTitle, posterUrl) {
+        movieTitle = (movieTitle || document.querySelector('#movie-title')?.textContent || '').toString().trim();
+        posterUrl = posterUrl || document.querySelector('#movie-poster')?.src || null;
+        if (typeof window.addToWatchlist === 'function' && window.addToWatchlist !== addToWatchlist) {
+            return window.addToWatchlist(movieTitle, posterUrl);
+        }
+        (window.showToast || ((m, t) => alert(m)))('Watchlist service not available', 'error');
+        return;
+    }
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+  const { data: { session } } = await supabase.auth.getSession();
+
+  const adminItem = document.querySelector('.admin-link');
+  if (!adminItem) return;
+
+  if (session && session.user.email === "akhilb490@gmail.com") {
+    adminItem.style.display = "inline-block";  // ✅ Admin sees the button
+  } else {
+    adminItem.style.display = "none";          // 🚫 Others do not
+  }
+});
+</script>
+
+
+<style>
+    /* Simple Cinemaverse-styled button */
+    .watchlist-btn {
+        margin-top: 8px;
+        padding: 8px 12px;
+        border: 1px solid #ff4646;
+        border-radius: 6px;
+        background: transparent;
+        color: #ff4646;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+    .watchlist-btn:hover {
+        background: rgba(255, 70, 70, 0.2);
+    }
+</style>
+
+<footer class=footer>
+    <p>&copy; 2023 Cinemaverse. All rights reserved. All content is the property of their respective owners.
+        Unauthorized use is prohibited.</p>
+</footer>
+</body>
+
+</html>

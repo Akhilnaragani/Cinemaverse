@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin - Manage Movies & Series</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Electrolize&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="auth.js"></script>
+
+  <style>
+    body { font-family:'Electrolize',sans-serif; background:#000; color:#fff; margin:0; }
+    .navbar { display:flex; justify-content:center; align-items:center; padding:10px 20px; background:#000; }
+    .logo { font-size:2em; color:#f00; position:absolute; left:20px; }
+    .menu-list { display:flex; list-style:none; gap:0; padding:0; }
+    .menu-list-item a { color:#fff; padding:10px 20px; text-decoration:none; font-weight:700; transition:.3s; }
+    .menu-list-item a:hover { color:#f00; }
+
+    h2 { color:#f00; margin-top:30px; text-align:center; }
+    .grid { display:grid; grid-template-columns:1fr; gap:24px; padding:0 16px; }
+    @media (min-width: 960px){ .grid { grid-template-columns: 1fr 1fr; } }
+
+    .form-box {
+      width:350px; margin:0 auto; padding:20px; background:#111; border-radius:8px;
+      display:flex; flex-direction:column; gap:10px;
+    }
+    .form-box small { color:#bbb; line-height:1.2; }
+    input, select, textarea {
+      padding:10px; border:0; border-radius:5px; background:#222; color:#fff;
+    }
+    textarea { min-height: 80px; resize: vertical; }
+    button {
+      padding:12px; border:0; background:#f00; border-radius:6px;
+      font-weight:700; cursor:pointer; color:#fff;
+    }
+    button:hover { background:#c20000; }
+
+    .list-wrap { padding:20px; }
+    .card-grid { display:flex; flex-wrap:wrap; gap:20px; justify-content:center; }
+    .movie-card, .series-card { width:180px; background:#111; border-radius:8px; overflow:hidden; text-align:center; }
+    .movie-card img, .series-card img { width:100%; height:250px; object-fit:cover; display:block; }
+    .movie-card h4, .series-card h4 { margin:10px 8px; min-height:48px; }
+    .delete-btn {
+      background:#222; border:1px solid #f00; color:#f00;
+      padding:6px 10px; border-radius:5px; cursor:pointer; margin-bottom:10px;
+    }
+    .delete-btn:hover { background:#f00; color:#fff; }
+  </style>
+</head>
+
+<body>
+<header class="navbar">
+  <div class="logo">Cinemaverse</div>
+  <ul class="menu-list">
+    <li class="menu-list-item"><a href="index.html">Home</a></li>
+    <li class="menu-list-item"><a href="movies.html">Movies</a></li>
+    <li class="menu-list-item"><a href="series.html">Series</a></li>
+    <li class="menu-list-item"><a href="watchlist.html">Watchlist</a></li>
+    <li class="menu-list-item logout-button" style="display:none;"><a href="javascript:void(0)" onclick="logout()">Logout</a></li>
+  </ul>
+</header>
+
+<div class="grid">
+  <!-- ===================== MOVIES ===================== -->
+  <section>
+    <h2>Add New Movie</h2>
+    <div class="form-box">
+      <input id="m-title" type="text" placeholder="Movie Title">
+      <input id="m-poster" type="text" placeholder="Poster Image URL">
+      <select id="m-category" title="Category">
+        <option value="Top">Top</option>
+        <option value="Latest">Latest</option>
+        <option value="TopRated">TopRated</option>
+        <option value="Comedy">Comedy</option>
+        <option value="Horror">Horror</option>
+        <option value="Sports">Sports</option>
+      </select>
+      <button onclick="addMovie()">Add Movie</button>
+      <small>Movies table: <code>movies(title, poster_url, category, created_at)</code></small>
+    </div>
+
+    <div class="list-wrap">
+      <h2>Delete Movies</h2>
+      <div id="movie-list" class="card-grid"></div>
+    </div>
+  </section>
+
+  <!-- ===================== SERIES ===================== -->
+  <section>
+    <h2>Add New Series</h2>
+    <div class="form-box">
+      <input id="s-title" type="text" placeholder="Series Title">
+      <input id="s-poster" type="text" placeholder="Poster Image URL">
+      <select id="s-category" title="Category">
+        <!-- Match series.html sections exactly -->
+        <option value="Popular">Popular</option>
+        <option value="Seinen">Seinen</option>
+        <option value="Latest">Latest</option>
+        <option value="TopRated">TopRated</option>
+        <option value="Comedy">Comedy</option>
+        <option value="Action">Action</option>
+        <option value="Sports">Sports</option>
+      </select>
+      <!-- Optional meta if you want (safe to leave blank) -->
+      <input id="s-genre" type="text" placeholder="Genre (optional)">
+      <textarea id="s-description" placeholder="Description (optional)"></textarea>
+
+      <button onclick="addSeries()">Add Series</button>
+      <small>Series table: <code>series(title, poster_url, category, description, genre, created_at)</code></small>
+    </div>
+
+    <div class="list-wrap">
+      <h2>Delete Series</h2>
+      <div id="series-list" class="card-grid"></div>
+    </div>
+  </section>
+</div>
+
+<script>
+  // ---------- MOVIES ----------
+  async function loadMovies() {
+    const { data, error } = await supabase
+      .from("movies")
+      .select("*")
+      .order("created_at", { ascending:false });
+
+    if (error) { console.log(error.message); return; }
+
+    const list = document.getElementById("movie-list");
+    list.innerHTML = "";
+
+    (data || []).forEach(m => {
+      const card = document.createElement("div");
+      card.className = "movie-card";
+      card.innerHTML = `
+        <img src="${m.poster_url || 'https://via.placeholder.com/300x450?text=No+Image'}" alt="">
+        <h4>${m.title}</h4>
+        <button class="delete-btn" onclick="deleteMovie(${m.id})">Delete</button>
+      `;
+      list.appendChild(card);
+    });
+  }
+
+  async function addMovie() {
+    const title = document.getElementById("m-title").value.trim();
+    const poster = document.getElementById("m-poster").value.trim();
+    const category = document.getElementById("m-category").value;
+
+    if (!title) return alert("Enter title");
+
+    const { error } = await supabase
+      .from("movies")
+      .insert({ title, poster_url: poster, category });
+
+    if (error) return alert(error.message);
+    alert("Movie Added ✅");
+    document.getElementById("m-title").value = "";
+    document.getElementById("m-poster").value = "";
+    document.getElementById("m-category").value = "Top";
+    loadMovies();
+  }
+
+  async function deleteMovie(id) {
+    const { error } = await supabase.from("movies").delete().eq("id", id);
+    if (error) return alert(error.message);
+    alert("Movie Deleted ❌");
+    loadMovies();
+  }
+
+  // ---------- SERIES ----------
+  async function loadSeries() {
+    const { data, error } = await supabase
+      .from("series")
+      .select("*")
+      .order("created_at", { ascending:false });
+
+    if (error) { console.log(error.message); return; }
+
+    const list = document.getElementById("series-list");
+    list.innerHTML = "";
+
+    (data || []).forEach(s => {
+      const card = document.createElement("div");
+      card.className = "series-card";
+      card.innerHTML = `
+        <img src="${s.poster_url || 'https://via.placeholder.com/300x450?text=No+Image'}" alt="">
+        <h4>${s.title}</h4>
+        <button class="delete-btn" onclick="deleteSeries(${s.id})">Delete</button>
+      `;
+      list.appendChild(card);
+    });
+  }
+
+  async function addSeries() {
+    const title = document.getElementById("s-title").value.trim();
+    const poster = document.getElementById("s-poster").value.trim();
+    const category = document.getElementById("s-category").value;
+    const description = document.getElementById("s-description").value.trim();
+    const genre = document.getElementById("s-genre").value.trim();
+
+    if (!title) return alert("Enter title");
+
+    const payload = { title, poster_url: poster, category };
+    if (description) payload.description = description;
+    if (genre) payload.genre = genre;
+
+    const { error } = await supabase.from("series").insert(payload);
+    if (error) return alert(error.message);
+
+    alert("Series Added ✅");
+    document.getElementById("s-title").value = "";
+    document.getElementById("s-poster").value = "";
+    document.getElementById("s-category").value = "Popular";
+    document.getElementById("s-description").value = "";
+    document.getElementById("s-genre").value = "";
+    loadSeries();
+  }
+
+  async function deleteSeries(id) {
+    const { error } = await supabase.from("series").delete().eq("id", id);
+    if (error) return alert(error.message);
+    alert("Series Deleted ❌");
+    loadSeries();
+  }
+
+  // ---------- AUTH GATE & INITIAL LOAD ----------
+  (async () => {
+    await requireAuth();   // redirect to login if not signed in
+    updateAuthUI();
+    loadMovies();
+    loadSeries();
+  })();
+</script>
+
+<script>
+(async () => {
+  const { data: { session } } = await supabase.auth.getSession();
+
+  // If no session, redirect to login
+  if (!session) {
+    window.location.href = "login.html";
+    return;
+  }
+
+  // Check email
+  const userEmail = session.user.email;
+
+  if (userEmail !== "akhilb490@gmail.com") {
+    alert("You are not allowed to access this page.");
+    window.location.href = "index.html";  // redirect to home page
+  }
+})();
+</script>
+
+</body>
+</html>

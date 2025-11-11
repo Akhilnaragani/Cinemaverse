@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang=en>
+
+<head>
+    <meta charset=UTF-8>
+    <meta name=viewport content="width=device-width, initial-scale=1.0">
+    <title>About Us - Cinemaverse</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box
+        }
+
+
+
+        body {
+            font-family: 'Electrolize', sans-serif;
+            background-color: black;
+            color: white;
+            margin: 0;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: #000;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 2em;
+            color: #f00;
+            position: absolute;
+            left: 20px;
+        }
+
+        .menu-list {
+            display: flex;
+            list-style: none;
+            padding: 0;
+        }
+
+        .menu-list-item a {
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            font-weight: bold;
+            transition: color .3s ease;
+        }
+
+        .menu-list-item a:hover {
+            color: #f00;
+        }
+
+
+        .logo-wrapper {
+            font-size: 1em
+        }
+
+
+
+
+
+        .about-section {
+            padding: 50px 20px;
+            text-align: center
+        }
+
+        .about-banner {
+            background-color: #222;
+            padding: 40px;
+            border-radius: 5px;
+            margin-bottom: 50px
+        }
+
+        .about-banner h1 {
+            font-size: 2.5em;
+            color: red
+        }
+
+        .about-banner p {
+            font-size: 1.5em;
+            color: #bbb
+        }
+
+        .about-container {
+            margin-top: 50px
+        }
+
+        .about-container h2 {
+            color: red;
+            font-size: 2.5em;
+            margin-bottom: 20px
+        }
+
+        .about-container p {
+            font-size: 1.1em;
+            line-height: 1.6;
+            margin-bottom: 30px
+        }
+
+        .offer-list {
+            display: flex;
+            justify-content: center;
+            gap: 50px;
+            margin-bottom: 50px
+        }
+
+        .offer-item {
+            text-align: center;
+            font-size: 1.2em
+        }
+
+        .offer-item i {
+            font-size: 2em;
+            color: red;
+            margin-bottom: 10px
+        }
+
+        .offer-item p {
+            font-size: 1em;
+            color: #ccc
+        }
+
+        @media(max-width:768px) {
+            .offer-list {
+                flex-direction: column;
+                align-items: center
+            }
+
+            .menu-list {
+                flex-direction: column;
+                gap: 20px
+            }
+
+            .about-banner h1 {
+                font-size: 2.5em
+            }
+
+            .about-container h2 {
+                font-size: 2em
+            }
+
+            .menu-list-item a {
+                font-size: 1.1em
+            }
+        }
+
+        .team-members {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            gap: 20px
+        }
+
+        .team-lead,
+        .team-member {
+            width: 48%;
+            background-color: #1c1c1c;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 6px 12px rgba(255, 0, 0, 0.1);
+            border: 1px solid rgba(255, 0, 0, 0.2);
+            transition: transform .3s ease
+        }
+
+        .team-lead:hover,
+        .team-member:hover {
+            transform: scale(1.03);
+            box-shadow: 0 8px 16px rgba(255, 0, 0, 0.3)
+        }
+
+        .team-lead {
+            border-left: 5px solid #f00
+        }
+
+        .team-member {
+            border-left: 5px solid #8b0000
+        }
+
+        .team-member-details {
+            margin-top: 15px
+        }
+
+        .team-member-details p {
+            margin: 5px 0;
+            color: #ccc;
+            line-height: 1.6
+        }
+
+        .team-member-details p strong {
+            color: #f00;
+            font-size: 1.3em;
+            display: block;
+            margin-bottom: 10px
+        }
+
+        .team-members h3 {
+            color: #f00;
+            border-bottom: 2px solid #8b0000;
+            padding-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px
+        }
+
+        .team-member-details p:hover {
+            color: #fff;
+            transition: color .3s ease
+        }
+    </style>
+    <link rel=stylesheet href=https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css>
+    <link href="https://fonts.googleapis.com/css2?family=Electrolize&display=swap" rel=stylesheet>
+</head>
+
+<body>
+    <header class="navbar">
+        <div class="logo">Cinemaverse</div>
+        <ul class="menu-list">
+            <li class="menu-list-item"><a href="index.html">Home</a></li>
+            <li class="menu-list-item"><a href="movies.html">Movies</a></li>
+            <li class="menu-list-item"><a href="series.html">Series</a></li>
+            <li class="menu-list-item"><a href="watchlist.html">Watchlist</a></li>
+            <li class="menu-list-item"><a href="gallery.html">Gallery</a></li>
+            <li class="menu-list-item"><a href="contact.html">Contact Us</a></li>
+            <li class="menu-list-item"><a href="about.html">About Us</a></li>
+            
+        </ul>
+    </header>
+
+    <section class=about-section>
+        <div class=about-banner>
+            <h1>Welcome to Cinemaverse</h1>
+            <p>Your Ultimate Destination for Movies and Series</p>
+        </div>
+        <div class=about-container>
+            <h2>Our Mission</h2>
+            <p>
+                At Cinemaverse, we aim to revolutionize your entertainment experience by providing a seamless and
+                engaging platform where movie enthusiasts can discover and connect.
+            </p>
+            <h2>What We Offer</h2>
+            <div class=offer-list>
+                <div class=offer-item>
+                    <i class="bi bi-star-fill"></i>
+                    <p>Curated Lists of Top Movies & Series</p>
+                </div>
+                <div class=offer-item>
+                    <i class="bi bi-info-circle-fill"></i>
+                    <p>In-depth Movie Information & Reviews</p>
+                </div>
+                <div class=offer-item>
+                    <i class="bi bi-people-fill"></i>
+                    <p>Community Interaction & Discussions</p>
+                </div>
+            </div>
+            <h2>Our Team</h2>
+            <div class=team-members>
+                <div class=team-lead>
+                    <h3>Project Lead</h3>
+                    <div class=team-member-details>
+                        <p><strong>N. Akhil</strong></p>
+                        <p>Lead Developer & Founder</p>
+                        <p>Email: 2303a51065@sru.edu.in</p>
+                        <p>Contact: +91 62811XXX76</p>
+                        <p>Primary architect and developer of Cinemaverse, responsible for overall project design and
+                            implementation.</p>
+                    </div>
+                </div>
+                <div class=team-member>
+                    <h3>Core Team Member</h3>
+                    <div class=team-member-details>
+                        <p><strong>N. Prashanth</strong></p>
+                        <p>Co-Developer</p>
+                        <p>Email: 2303a51063@sru.edu.in</p>
+                        <p>Contact: +91 70367XXX32</p>
+                        <p>Key contributor to the project development.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+
+</html>
