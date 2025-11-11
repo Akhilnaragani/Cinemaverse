@@ -538,7 +538,7 @@
     </header>
     <section class=movie-category>
         <h2>Popular Series</h2>
-        <div class=movies-list>
+        <div class=movies-list data-category="Popular">
             <div class=movie-item onclick="showSeriesDetails('One-Piece')">
                 <img src="https://imgsrv.crunchyroll.com/cdn-cgi/image/fit=contain,format=auto,quality=85,width=480,height=720/catalog/crunchyroll/757bae5a21039bac6ebace5de9affcd8.jpg"
                     alt="Movie 1">
@@ -584,7 +584,7 @@
     </section>
     <section class=movie-category>
         <h2>Seinen series</h2>
-        <div class=movies-list>
+        <div class=movies-list data-category="Seinen">
             <div class=movie-item onclick="showSeriesDetails('Vinland saga')">
                 <img src=https://fr.web.img4.acsta.net/pictures/19/09/16/17/09/4903250.jpg alt="Movie 1">
                 <h3>Vinland saga</h3>
@@ -627,7 +627,7 @@
     </section>
     <section class=movie-category>
         <h2>Latest Series</h2>
-        <div class=movies-list>
+        <div class=movies-list data-category="Latest">
             <div class=movie-item onclick="showSeriesDetails('Bleach-TYBW')">
                 <img src="https://th.bing.com/th/id/OIP.LE-6ZSy1TpNPJYV_hIby3QHaKe?rs=1&pid=ImgDetMain" alt="Movie 1">
                 <h3>Bleach-TYBW</h3>
@@ -664,7 +664,7 @@
     </section>
     <section class=movie-category>
         <h2>Top-Rated Series on IMDb</h2>
-        <div class=movies-list>
+        <div class=movies-list  data-category="TopRated">
             <div class=movie-item onclick="showSeriesDetails('Breaking Bad')">
                 <img src=https://m.media-amazon.com/images/M/MV5BMzU5ZGYzNmQtMTdhYy00OGRiLTg0NmQtYjVjNzliZTg1ZGE4XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg
                     alt="Movie 1">
@@ -700,7 +700,7 @@
     </section>
     <section class=movie-category>
         <h2>Comedy Series</h2>
-        <div class=movies-list>
+        <div class=movies-list data-category="Comedy">
             <div class=movie-item onclick="showSeriesDetails('Young-Sheldon')">
                 <img src="https://th.bing.com/th/id/OIP.FgF_eOMYuqjEWM5SxUeQVAHaLH?rs=1&pid=ImgDetMain" alt="Movie 1">
                 <h3>Young-Sheldon</h3>
@@ -736,7 +736,7 @@
     </section>
     <section class=movie-category>
         <h2>Action Series</h2>
-        <div class=movies-list>
+        <div class=movies-list data-category="Action">
             <div class=movie-item onclick="showSeriesDetails('Loki')">
                 <img src=https://static1.colliderimages.com/wordpress/wp-content/uploads/2023/11/tom-hiddlestone-god-loki-season-2-poster.jpg
                     alt="Movie 1">
@@ -772,7 +772,7 @@
     </section>
     <section class=movie-category>
         <h2>Sports series</h2>
-        <div class=movies-list>
+        <div class=movies-list data-category="Sports">
             <div class=movie-item onclick="showSeriesDetails('Blue lock')">
                 <img src=https://cdn.kobo.com/book-images/8f338bb8-ad59-469b-8708-9c91001a4350/1200/1200/False/blue-lock-6.jpg
                     alt="Movie 1">
@@ -922,6 +922,39 @@
     background: rgba(255,70,70,0.2);
   }
 </style>
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+  try {
+    const { data, error } = await supabase
+      .from('series')
+      .select('id, title, poster_url, category')
+      .order('created_at', { ascending: false });
+
+    if (error) { console.error(error.message); return; }
+
+    (data || []).forEach(s => {
+      const container = document.querySelector(`.movies-list[data-category="${s.category}"]`);
+      if (!container) return; // unknown section → skip
+
+      // Avoid duplicate rendering if you also have seed cards
+      if (container.querySelector(`[data-series-id="${s.id}"]`)) return;
+
+      const card = document.createElement('div');
+      card.className = 'movie-item';
+      card.setAttribute('data-series-id', s.id);
+      card.setAttribute('data-title', s.title);
+      card.innerHTML = `
+        <img src="${s.poster_url || 'https://via.placeholder.com/300x450?text=No+Image'}" alt="${s.title}">
+        <h3>${s.title}</h3>
+      `;
+      card.addEventListener('click', () => showSeriesDetails(s.title));
+      container.prepend(card); // newest first
+    });
+  } catch (e) {
+    console.error('Load series failed:', e);
+  }
+});
+</script>
 
 </body>
 
