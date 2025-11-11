@@ -962,7 +962,7 @@ async function loadExtraMovies() {
       <img src="${movie.poster_url}" alt="Movie">
       <h3>${movie.title}</h3>
     `;
-    list.appendChild(div);
+    list.prepend(div);
   });
 }
 
@@ -980,47 +980,6 @@ loadExtraMovies().then(() => {
 
 </style>
 
-
-
-<script>
-async function loadDynamicMovies() {
-  try {
-    const { data, error } = await supabase
-      .from('movies')
-      .select('*')
-      .order('created_at', { ascending: false });
-
-    if (error) {
-      console.error("Error loading movies:", error.message);
-      return;
-    }
-
-    const container = document.getElementById("dynamic-movies");
-    container.innerHTML = "";
-
-    data.forEach(movie => {
-      const item = document.createElement("div");
-      item.className = "movie-item";
-      item.onclick = () => showMovieDetails(movie.title);
-
-      const img = document.createElement("img");
-      img.src = movie.poster_url || "https://via.placeholder.com/300x450?text=No+Image";
-
-      const title = document.createElement("h3");
-      title.textContent = movie.title;
-
-      item.appendChild(img);
-      item.appendChild(title);
-      container.appendChild(item);
-    });
-  } catch (err) {
-    console.error(err);
-  }
-}
-
-// Load once when page opens
-document.addEventListener('DOMContentLoaded', loadDynamicMovies);
-</script>
 <style>
     .movie-item img {
   width: 100%;
