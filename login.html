@@ -929,7 +929,7 @@ window.addEventListener('DOMContentLoaded', () => {
             if (!client) return;
 
             const { error } = await client.auth.resetPasswordForEmail(email, {
-        redirectTo: `${location.origin}/reset-password.html`
+        redirectTo: "https://cinemaverse-six.vercel.app/reset-password.html"
       });
 
       if (error) {
